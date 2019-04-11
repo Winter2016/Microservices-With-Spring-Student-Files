@@ -1,5 +1,6 @@
 package demo.service;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,7 @@ public class WordServiceImpl implements WordService {
 	}
 	
 	@Override
+	@HystrixCommand(fallbackMethod = "getEmptyWord")
 	public Word getAdjective() {
 		return adjectiveClient.getWord();
 	}
@@ -43,5 +45,9 @@ public class WordServiceImpl implements WordService {
 	@Override
 	public Word getNoun() {
 		return nounClient.getWord();
-	}	
+	}
+
+	private Word getEmptyWord() {
+		return new Word("");
+	}
 }
